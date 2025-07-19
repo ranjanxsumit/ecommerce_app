@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Dict, Optional
 from .product import PageInfo
 
 # -- Request Models --
@@ -14,9 +14,6 @@ class OrderIn(BaseModel):
 
 # -- Response Models --
 
-class OrderId(BaseModel):
-    id: str
-
 class ProductDetails(BaseModel):
     id: str
     name: str
@@ -26,7 +23,7 @@ class OrderItemDetail(BaseModel):
     qty: int
 
 class OrderOut(BaseModel):
-    id: str = Field(..., alias="_id")
+    id: str = Field(..., alias="_id")  # ✅ Maps MongoDB's _id to id
     items: List[OrderItemDetail]
     total: float
 
@@ -35,6 +32,9 @@ class OrderOut(BaseModel):
         json_encoders = {
             "id": str
         }
+
+class OrderId(BaseModel):
+    id: str
 
 class OrderListResponse(BaseModel):
     data: List[OrderOut]
