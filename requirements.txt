@@ -1,6 +1,8 @@
 fastapi
-uvicorn[standard]
-motor
-pydantic
+uvicorn
+motor>=3.4.0
 python-dotenv
-pydantic-settings
+pydantic>=2.4.0
+pydantic-settings>=2.0.0
+pytest
+httpx
