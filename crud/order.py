@@ -1,5 +1,32 @@
 from bson import ObjectId
 from database import order_collection, product_collection
+from models.order import OrderIn
+
+async def create_order(order: OrderIn):
+    try:
+        print("📦 Incoming order:", order.dict())
+
+        product_ids = [ObjectId(item.productId) for item in order.items]
+        print("🔍 Converted product IDs:", product_ids)
+
+        product_count = await product_collection.count_documents({"_id": {"$in": product_ids}})
+        print("📊 Product count found:", product_count)
+
+        if product_count != len(product_ids):
+            raise ValueError("One or more products not found")
+
+        order_dict = order.dict()
+        for item in order_dict["items"]:
+            item["productId"] = ObjectId(item["productId"])
+
+        result = await order_collection.insert_one(order_dict)
+        print("✅ Order inserted:", result.inserted_id)
+
+        return {"id": str(result.inserted_id)}
+
+    except Exception as e:
+        print("❌ Error in create_order:", str(e))
+        raise
 
 async def list_orders(user_id: str, limit: int, offset: int):
     try:
@@ -20,7 +47,7 @@ async def list_orders(user_id: str, limit: int, offset: int):
             {
                 "$unwind": {
                     "path": "$product_details",
-                    "preserveNullAndEmptyArrays": True  # prevents crash if product not found
+                    "preserveNullAndEmptyArrays": True
                 }
             },
             {
@@ -39,7 +66,7 @@ async def list_orders(user_id: str, limit: int, offset: int):
                         "$sum": {
                             "$multiply": [
                                 "$items.qty",
-                                { "$ifNull": [ "$product_details.price", 0 ] }
+                                {"$ifNull": ["$product_details.price", 0]}
                             ]
                         }
                     }
@@ -49,7 +76,6 @@ async def list_orders(user_id: str, limit: int, offset: int):
 
         orders = await order_collection.aggregate(pipeline).to_list(length=limit)
 
-        # Convert ObjectId to string for each order's id
         for order in orders:
             order["id"] = str(order["_id"])
             del order["_id"]
@@ -57,5 +83,5 @@ async def list_orders(user_id: str, limit: int, offset: int):
         return orders
 
     except Exception as e:
-        print(f"❌ Error in list_orders: {e}")
+        print("❌ Error in list_orders:", str(e))
         raise
