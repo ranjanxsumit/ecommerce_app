@@ -4,7 +4,7 @@ from models.order import OrderIn
 
 async def create_order(order: OrderIn):
     try:
-        print("📦 Incoming order:", order.dict())
+        print("📦 Order received:", order.dict())
 
         product_ids = [ObjectId(item.productId) for item in order.items]
         print("🔍 Converted product IDs:", product_ids)
@@ -19,13 +19,15 @@ async def create_order(order: OrderIn):
         for item in order_dict["items"]:
             item["productId"] = ObjectId(item["productId"])
 
+        print("🧾 Final order dict:", order_dict)
+
         result = await order_collection.insert_one(order_dict)
-        print("✅ Order inserted:", result.inserted_id)
+        print("✅ Order inserted with ID:", result.inserted_id)
 
         return {"id": str(result.inserted_id)}
 
     except Exception as e:
-        print("❌ Error in create_order:", str(e))
+        print("❌ Final error in create_order:", str(e))
         raise
 
 async def list_orders(user_id: str, limit: int, offset: int):
@@ -77,8 +79,7 @@ async def list_orders(user_id: str, limit: int, offset: int):
         orders = await order_collection.aggregate(pipeline).to_list(length=limit)
 
         for order in orders:
-            order["id"] = str(order["_id"])
-            del order["_id"]
+            order["_id"] = str(order["_id"])  # ✅ Preserve _id for alias mapping
 
         return orders
 
