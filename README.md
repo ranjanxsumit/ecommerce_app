@@ -24,7 +24,7 @@ This project is a simple e-commerce backend application built with FastAPI and M
 2.  **Create `.env` file:**
     Create a file named `.env` in the project root and add your MongoDB connection string:
     ```
-    MONGO_URI=your_mongodb_connection_string
+    MONGODB_URI=your_mongodb_connection_string
     ```
 
 3.  **Install dependencies:**
