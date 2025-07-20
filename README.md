@@ -1,6 +1,65 @@
 # Backend Task: E-Commerce API
 
-This project is a simple e-commerce backend application built with FastAPI and MongoDB as per the hiring task specification.
+# 🛒 E-Commerce API Project
+
+This project is a simplified backend API for an e-commerce platform inspired by Flipkart/Amazon. It allows users to manage product listings and order placements. The APIs are built using FastAPI with MongoDB Atlas as the backend database.
+
+---
+
+## 📦 Features
+
+### 1. Create Product API
+- **Endpoint**: `/products`
+- **Method**: `POST`
+- **Description**: Adds a new product to the inventory.
+- **Response**: 
+  - Status Code: `201 Created`
+
+---
+
+### 2. List Products API
+- **Endpoint**: `/products`
+- **Method**: `GET`
+- **Description**: Fetches product listings with optional filters.
+- **Query Parameters** (all optional):
+  - `name`: Partial/regex search on product name
+  - `size`: Filter by size (e.g., `large`)
+  - `limit`: Number of products to return
+  - `offset`: Number of products to skip (pagination, sorted by `_id`)
+- **Response**: 
+  - Status Code: `200 OK`
+
+---
+
+### 3. Create Order API
+- **Endpoint**: `/orders`
+- **Method**: `POST`
+- **Description**: Creates a new order for a product.
+- **Response**: 
+  - Status Code: `201 Created`
+
+---
+
+### 4. List Orders API
+- **Endpoint**: `/orders/<user_id>`
+- **Method**: `GET`
+- **Description**: Retrieves orders placed by a specific user.
+- **Query Parameters** (all optional):
+  - `limit`: Number of orders to return
+  - `offset`: Number of orders to skip (pagination, sorted by `_id`)
+- **Response**: 
+  - Status Code: `200 OK`
+
+---
+
+## 🧪 Tech Stack
+
+- **Language**: Python `3.10+`
+- **Framework**: FastAPI
+- **Database**: MongoDB Atlas (M0 Free Tier)
+- **ORM/Connector**: Pymongo or Motor
+
+---
 
 ## Project Structure
 
