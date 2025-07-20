@@ -1,4 +1,4 @@
-# HROne Backend Intern Task: E-Commerce API
+# Backend Task: E-Commerce API
 
 This project is a simple e-commerce backend application built with FastAPI and MongoDB as per the hiring task specification.
 
